@@ -1,10 +1,12 @@
 ## Wordpress Developer Demo
 A simple apache/php wordpress app dockerized for local development to test a developers skills in php and wordpress.
 
-# RUN
-- In directory, run ```docker build --rm -f "Dockerfile" -t wordpress:latest .```
-- Then run ```docker-compose up```
-- In your browser, visit ```http://localhost:8000``` to complete the Wordpress installation. Your docker-compose with have the database credentials and host.
+# RUN Environment
+- In directory, run ```sh local-dev.sh start```
+- In your browser, visit ```http://localhost:8000``` to complete the Wordpress installation. Your docker-compose will have the database credentials and host in the Wordpress service.
+
+# STOP Environment
+- In directory, enter ctrl c and run ```sh local-dev.sh stop```
 
 # TASK
 - Create a plugin that allows the admin to search an api and return results in a table displayed in the WP Admin Plugin page
