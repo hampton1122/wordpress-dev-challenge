@@ -1,4 +1,4 @@
-## Wordpress Developer Demo
+## Wordpress Developer Challenge
 A simple apache/php wordpress app dockerized for local development to test a developers skills in php and wordpress.
 
 # RUN Environment
