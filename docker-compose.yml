@@ -19,6 +19,8 @@ services:
      build:
       context: ./wordpress
       dockerfile: Dockerfile
+     expose:
+       - "9000"
      ports:
        - "8000:80"
      restart: always
@@ -27,5 +29,8 @@ services:
        WORDPRESS_DB_USER: wordpress
        WORDPRESS_DB_PASSWORD: wordpress
        WORDPRESS_DB_NAME: wordpress
+       XDEBUG_CONFIG: remote_host=172.17.0.1
+     volumes:
+       - ./wordpress:/var/www/html
 volumes:
     db_data: {}
