@@ -24,6 +24,57 @@ wp_register_style('pure', 'https://unpkg.com/purecss@1.0.0/build/pure-min.css');
 wp_enqueue_style('pure');
 wp_enqueue_script('JServiceClue', plugin_dir_url(__FILE__) . 'js/JServiceClue.js', array('jquery'));
 
+function create_jeopardy_posttype() {
+    register_post_type( 'jeopardy',
+        array(
+            'labels' => array(
+                'name' => __( 'Clues' ),
+                'singular_name' => __( 'Clues' ),
+                'add_new' => __( 'Add Custom Clue'),
+                'edit_item' => __( 'Edit Clue' ),
+                'view_item' => __( 'View Clue' ),
+                'search_items' => __( 'Search Clues' ),
+                'not_found' => __( 'No Clue found' ),
+                'not_found_in_trash' => __( 'No Clue found in trash' ),
+                'parent_item_colon' => __( '' ),
+                'menu_name' => __( 'Clues' )
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'rewrite' => array('slug' => 'clues'),
+            'show_in_menu' => true,
+            'hierarchical' => true,
+            'menu_position' => 21,
+            'capabilities' => array(
+                            'edit_post' => 'edit_clue',
+                            'edit_posts' => 'edit_clues',
+                            'edit_others_posts' => 'edit_other_clues',
+                            'publish_posts' => 'publish_clues',
+                            'read_post' => 'read_clue',
+                            'read_private_posts' => 'read_private_clues',
+                            'delete_post' => 'delete_clue'
+                        ),
+            'map_meta_cap' => true,
+            'supports' => array('title', 'editor', 'author', 'revision')
+        )
+    );
+}
+add_action( 'init', 'create_jeopardy_posttype' );
+
+function add_clue_caps() {
+    $role = get_role( 'administrator' );
+    $role->add_cap( 'edit_clue' ); 
+    $role->add_cap( 'edit_clues' ); 
+    $role->add_cap( 'edit_others_clues' ); 
+    $role->add_cap( 'publish_clues' ); 
+    $role->add_cap( 'read_clue' ); 
+    $role->add_cap( 'read_private_clues' ); 
+    $role->add_cap( 'delete_clue' ); 
+    $role->add_cap( 'edit_published_clues' );   //added
+    $role->add_cap( 'delete_published_clues' ); //added
+  }
+add_action( 'admin_init', 'add_clue_caps');
+
 function sp_jservice_clue_search_activate()
 {
     //call recursive function that will pull all clues with pagination
@@ -39,7 +90,7 @@ function sp_jservice_clue_search_uninstall()
 
 function sp_jservice_clue_search_menu()
 {
-    add_menu_page('Clue Search Page', 'Clue Search', 'manage_options', 'sp_jservice_clue_search_menu', 'sp_jservice_clue_search_menu_option');
+    add_submenu_page('edit.php?post_type=jeopardy', 'Clue API Search', 'Clue API Search', "manage_options", 'sp_jservice_clue_search_menu', 'sp_jservice_clue_search_menu_option', '');
 }
 
 function sp_jservice_clue_search_menu_option()
@@ -100,6 +151,7 @@ function sp_jservice_clue_create_post()
             'post_title' => $_POST['question'],
             'post_content' => $_POST['answer'],
             'post_type' => 'jeopardy',
+            'post_status' => 'publish'
         );
 
         if (wp_insert_post($post)) {
